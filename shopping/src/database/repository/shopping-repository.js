@@ -92,50 +92,52 @@ class ShoppingRepository {
     //check transaction for payment Status
     
     try{
-        const cart = await CartModel.findOne({customerId: customerId});
+      const cart = await CartModel.findOne({customerId: customerId});
 
-        if(cart){
-            
-            // let amount = 0;   
+      console.log("cart: ", cart)
 
-            let cartItems = cart.items;
+      if (cart) {
+          
+        // let amount = 0;   
 
-            console.log("cartItems: ", cartItems)
+        let cartItems = cart.items;
 
-            if(cartItems.length > 0){
-                //process Order
-                const amount = cartItems.reduce((accumulator, item) => {
-                  accumulator + (parseInt(item.product.price) *  parseInt(item.unit));   
-                }, 0);
-    
-                // 86873645
-                const orderId = uuidv4();
-    
-                const order = new OrderModel({
-                    orderId,
-                    customerId,
-                    amount,
-                    txnId,
-                    status: 'received',
-                    items: cartItems
-                })
-    
-                
-                const orderResult = await order.save();
-                
-                cart.items = [];
-                await cart.save();
+        console.log("cartItems: ", cartItems)
 
-                return orderResult;
-            }
-        } 
+        if(cartItems.length > 0){
+            //process Order
+          const amount = cartItems.reduce((accumulator, item) => {
+            accumulator + (parseInt(item.product.price) *  parseInt(item.unit));   
+          }, 0);
+
+          // 86873645
+          const orderId = uuidv4();
+
+          const order = new OrderModel({
+              orderId,
+              customerId,
+              amount,
+              txnId,
+              status: 'received',
+              items: cartItems
+          })
+
+          
+          const orderResult = await order.save();
+          
+          cart.items = [];
+          await cart.save();
+
+          return orderResult;
+        }
+      } 
 
       return {}
 
-    }catch(err){
-        console.log(err)
+    } catch (err) {
+      console.log(err)
 
-        throw APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Find Category')
+      throw APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Find Category')
     }
     
 

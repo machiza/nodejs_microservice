@@ -28,8 +28,8 @@ class ShoppingService {
     // Verify the txn number with payment logs
     
     try {
-        const orderResult = await this.repository.CreateNewOrder(_id, txnNumber);
-        return FormateData(orderResult);    
+      const orderResult = await this.repository.CreateNewOrder(_id, txnNumber);
+      return FormateData(orderResult);    
     } catch (err) {
         throw err;
     }
@@ -59,6 +59,8 @@ class ShoppingService {
   }
 
   async SubscribeEvents(payload) {
+
+    payload = JSON.parse(payload);
 
     const { event, data } =  payload;
 

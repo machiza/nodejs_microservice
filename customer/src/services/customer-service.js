@@ -131,6 +131,7 @@ class CustomerService {
 
   async ManageOrder(customerId, order) {
     try {
+      console.log("Add order to profile: ", order);
       const orderResult = await this.repository.AddOrderToProfile(customerId, order);
       return FormateData(orderResult);
     } catch (err) {
@@ -139,6 +140,10 @@ class CustomerService {
   }
 
   async SubscribeEvents(payload) {
+
+    payload = JSON.parse(payload);
+
+    console.log("payload: ", payload.event)
 
     const { event, data } =  payload;
 
